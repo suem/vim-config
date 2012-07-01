@@ -38,4 +38,4 @@ bindkey '^R' history-incremental-search-backward
 
 # Customize to your needs...
 eval `dircolors ~/.dir_colors`
-
+alias o=exo-open
