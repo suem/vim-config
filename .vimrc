@@ -54,3 +54,16 @@ set guioptions-=r  "remove right-hand scroll bar"
 
 let g:NERDTreeDirArrows=0
 
+set tags+=~/.vim/systags
+
+
+
+let g:SuperTabDefaultCompletionType = "context"
+"let g:SuperTabDefaultCompletionType = "<C-X><C-O>"
+"highlight   clear
+"highlight   Pmenu         ctermfg=0 ctermbg=2
+"highlight   PmenuSel      ctermfg=0 ctermbg=7
+"highlight   PmenuSbar     ctermfg=7 ctermbg=0
+"highlight   PmenuThumb    ctermfg=0 ctermbg=7
+"set completeopt=menuone,menu,longest
+
