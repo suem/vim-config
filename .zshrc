@@ -39,3 +39,8 @@ bindkey '^R' history-incremental-search-backward
 # Customize to your needs...
 eval `dircolors ~/.dir_colors`
 alias o=exo-open
+
+
+export _JAVA_OPTIONS="-Dawt.useSystemAAFontSettings=on -Dswing.aatext=true -Dswing.defaultlaf=com.sun.java.swing.plaf.gtk.GTKLookAndFeel"
+
+
