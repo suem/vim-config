@@ -12,9 +12,9 @@ map <A-f> gg=G``
 
 
 " Solarized Color Scheme
-syntax enable
-set background=light
-colorscheme solarized
+"syntax enable
+"set background=light
+"colorscheme solarized
 
 " change the mapleader from \ to ,
 let mapleader=","

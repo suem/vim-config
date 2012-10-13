@@ -49,5 +49,4 @@ set input-meta on
 set convert-meta on
 set output-meta on
 
-fortune | cowsay -f dragon
 
