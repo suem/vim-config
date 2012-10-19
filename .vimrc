@@ -12,7 +12,7 @@ map <A-f> gg=G``
 
 
 " Solarized Color Scheme
-"syntax enable
+syntax enable
 "set background=light
 "colorscheme solarized
 
@@ -137,6 +137,10 @@ let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
 let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
 let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
 let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
+
+
+" press jj in insert mode to exit it
+:imap jj <Esc>
 
 
 
