@@ -1,25 +1,28 @@
-" This must be first, because it changes other options as side effect
-set nocompatible
 
-" Setup Bindles
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
+Bundle 'gmarik/vundle'
 
 Bundle 'Solarized'
 Bundle 'Zenburn'
-Bundle 'Command-T'
 Bundle 'Auto-Pairs'
 Bundle 'The-NERD-Commenter'
 Bundle 'EasyMotion'
-Bundle 'Powerline'
+Bundle 'surround.vim'
+Bundle 'SuperTab'
+Bundle 'terryma/vim-expand-region.git'
+Bundle 'Syntastic'
+Bundle 'ctrlp.vim'
 
-map <A-f> gg=G``
+" fonts
+set guifont=DejaVu\ Sans\ Mono\ 11
 
 
 " Solarized Color Scheme
 syntax enable
-"set background=light
-"colorscheme solarized
+let g:solarized_termcolors=16
+set background=light
+colorscheme solarized
 
 " change the mapleader from \ to ,
 let mapleader=","
@@ -31,8 +34,6 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 "enable file type specific handling
 filetype plugin indent on
 
-" user ; instead of : for commands
-nnoremap ; :
 
 " allow hidden buffers
 set hidden
@@ -70,4 +71,6 @@ let g:NERDTreeDirArrows=0
 :imap jj <Esc>
 
 
+" user ; instead of : for commands
+"nnoremap ; :
 
