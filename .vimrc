@@ -1,106 +1,313 @@
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-Bundle 'gmarik/vundle'
+" Disable vi-compatibility
+set nocompatible
 
-Bundle 'Solarized'
-Bundle 'Zenburn'
-Bundle 'Auto-Pairs'
-Bundle 'The-NERD-Commenter'
-Bundle 'EasyMotion'
-Bundle 'surround.vim'
-"Bundle 'SuperTab'
-Bundle 'terryma/vim-expand-region.git'
-Bundle 'Syntastic'
-Bundle 'ctrlp.vim'
-Bundle 'scrooloose/nerdtree.git'
-Bundle 'majutsushi/tagbar.git'
-Bundle 'neocomplcache'
-"Bundle 'Valloric/YouCompleteMe'
-Bundle 'Shougo/vimproc.vim'
-Bundle 'lukerandall/haskellmode-vim'
-Bundle 'eagletmt/ghcmod-vim'
-Bundle 'ujihisa/neco-ghc'
+"===============================================================================
+" NeoBundle
+"===============================================================================
 
+if has ('vim_starting')
+  set runtimepath+=~/.vim/bundle/neobundle.vim/
+endif
 
+call neobundle#rc(expand('~/.vim/bundle/'))
 
-" fonts
-set guifont=DejaVu\ Sans\ Mono\ 11
+" Let NeoBundle manage NeoBundle
+NeoBundleFetch 'Shougo/neobundle.vim'
 
+NeoBundle 'Shougo/vimproc', { 'build': {
+      \   'windows': 'make -f make_mingw32.mak',
+      \   'cygwin': 'make -f make_cygwin.mak',
+      \   'mac': 'make -f make_mac.mak',
+      \   'unix': 'make -f make_unix.mak',
+      \ } }
 
-" Solarized Color Scheme
+" Fuzzy search
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/unite-outline'
+NeoBundle 'Shougo/unite-help'
+NeoBundle 'Shougo/unite-session'
+NeoBundle 'thinca/vim-unite-history'
+
+" Code completion
+NeoBundle 'Shougo/neocomplcache'
+
+" Snippets
+NeoBundle 'Shougo/neosnippet'
+
+" Comments
+NeoBundle 'scrooloose/nerdcommenter'
+
+" Close Paris
+NeoBundle 'Townk/vim-autoclose'
+
+" File browsing
+NeoBundle 'scrooloose/nerdtree'
+
+" Syntax checker
+NeoBundle 'scrooloose/syntastic'
+
+" Git
+NeoBundle 'tpope/vim-fugitive'
+
+" Motions
+"NeoBundle 'Lokaltog/vim-easymotion'
+"NeoBundle 'goldfeld/vim-seek'
+
+" Text Objects
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-repeat'
+NeoBundle 'kana/vim-textobj-user'
+NeoBundle 'kana/vim-textobj-entire' " ae, ie
+NeoBundle 'kana/vim-textobj-lastpat' " a/, i/, a?, i?
+NeoBundle 'kana/vim-textobj-line' " al, il
+NeoBundle 'kana/vim-textobj-indent' " ai, ii, aI, iI
+NeoBundle 'lucapette/vim-textobj-underscore' " a_, i_
+
+" Status line
+"NeoBundle 'bling/vim-airline'
+NeoBundle 'maciakl/vim-neatstatus'
+
+" Color themems
+NeoBundle 'altercation/vim-colors-solarized'
+NeoBundle 'nanotech/jellybeans.vim'
+
+" C/C++ support for neocomplete
+NeoBundle 'Shougo/neocomplcache-clang'
+
+" Haskell GHC completition
+NeoBundle 'ujihisa/neco-ghc'
+
+filetype plugin indent on
 syntax enable
-let g:solarized_termcolors=16
-set background=light
+
+NeoBundleCheck
+
+
+"===============================================================================
+" General Settings
+"===============================================================================
+
+
+syntax on
+
+set lazyredraw
+
+" Solid line for vsplit separator
+set fcs=vert:│
+
+" Give one virtual space at end of line
+set virtualedit=onemore
+
+" Turn on line number
+set number
+
+"
+set cursorline
+
+" Always splits to the right and below
+set splitright
+set splitbelow
+
+" 256bit terminal
+set t_Co=256
+
+" Colorscheme
 colorscheme solarized
 
-" change the mapleader from \ to ,
-let mapleader=","
+" Tell Vim to use dark background
+set background=light
 
-" Quickly edit/reload the vimrc file
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
+" Set Font
+set guifont=Monospace\ 13
 
-"enable file type specific handling
-filetype plugin indent on
+" Sets how many lines of history vim has to remember
+set history=10000
 
+" Set to auto read when a file is changed from the outside
+set autoread
 
-" allow hidden buffers
-set hidden
-
-set nowrap        " don't wrap lines
-set tabstop=4     " a tab is four spaces
-set backspace=indent,eol,start
-" allow backspacing over everything in insert mode
-set autoindent    " always set autoindenting on
-set copyindent    " copy the previous indentation on autoindenting
-set number        " always show line numbers
-set shiftwidth=4  " number of spaces to use for autoindenting
-set shiftround    " use multiple of shiftwidth when indenting with '<' and '>'
-set showmatch     " set show matching parenthesis
-set ignorecase    " ignore case when searching
-set smartcase     " ignore case if search pattern is all lowercase,
-"    case-sensitive otherwise
-set smarttab      " insert tabs on the start of a line according to
-"    shiftwidth, not tabstop
-set hlsearch      " highlight search terms
-set incsearch     " show search matches as you type
-set visualbell           " don't beep
-set noerrorbells         " don't beep
-set nobackup
-set noswapfile
-
+" Disable GUI stuff
 set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
-set guioptions-=r  "remove right-hand scroll bar"
+set guioptions-=r  "remove right-hand scroll bar
 
-" Activate wildmode
-set wildmenu
+" Display unprintable chars
+set list
+set listchars=tab:▸\ ,extends:❯,precedes:❮,nbsp:␣
+set showbreak=↪
+
+" listchar=trail is not as flexible, use the below to highlight trailing
+" whitespace. Don't do it for unite windows or readonly files
+highlight ExtraWhitespace ctermbg=red guibg=red
+match ExtraWhitespace /\s\+$/
+augroup MyAutoCmd
+  autocmd BufWinEnter * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+$/ | endif
+  autocmd InsertEnter * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+\%#\@<!$/ | endif
+  autocmd InsertLeave * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+$/ | endif
+  autocmd BufWinLeave * if &modifiable && &ft!='unite' | call clearmatches() | endif
+augroup END
+
+" Minimal number of screen lines to keep above and below the cursor
+set scrolloff=10
+
+" Min width of the number column to the left
+set numberwidth=1
+
+" Open all folds initially
+set foldmethod=indent
+set foldlevelstart=99
+
+" No need to show mode due to Powerline
+set noshowmode
+
+" Auto complete setting
+set completeopt=longest,menuone
+
 set wildmode=list:longest,full
+set wildmenu "turn on wild menu
+set wildignore=*.o,*.obj,*~ "stuff to ignore when tab completing
+set wildignore+=*DS_Store*
+set wildignore+=vendor/rails/**
+set wildignore+=vendor/cache/**
+set wildignore+=*.gem
+set wildignore+=log/**
+set wildignore+=tmp/**
+set wildignore+=*.png,*.jpg,*.gif
+set wildignore+=*.so,*.swp,*.zip,*/.Trash/**,*.pdf,*.dmg,*/Library/**,*/.rbenv/**
+set wildignore+=*/.nx/**,*.app
 
-" Ignored filetypes in search
-set wildignore+=*/tmp/*,*.so,*.swp,*.zip,*.class
+" Allow changing buffer without saving it first
+set hidden
 
-" Fix NerdTree bug 
-let g:NERDTreeDirArrows=0
+" Set backspace config
+set backspace=eol,start,indent
 
-" Configure CtrP
-let g:ctrlp_cmd = 'CtrlPMixed'
-let g:ctrlp_custom_ignore = {
-  \ 'dir':  '\v[\/]\.(git|hg|svn)$',
-  \ 'file': '\v\.(exe|so|dll|class)$',
-  \ }
-nmap <M-b> :CtrlPBuffer<cr>
-nmap <M-o> :CtrlPBufTag<cr>
+" Case insensitive search
+set ignorecase
+set smartcase
 
-let g:EclimCompletionMethod = 'omnifunc'
+" Set sensible heights for splits
+" set winheight=50
+" Setting this causes problems with Unite-outline. Don't really need it
+" set winminheight=5
 
-" Completion options
-set completeopt-=preview
+" Make search act like search in modern browsers
+set incsearch
+
+" Make regex a little easier to type
+set magic
+
+" Don't show matching brackets
+set noshowmatch
+
+" Show incomplete commands
+set showcmd
+
+" Turn off sound
+set vb
+set t_vb=
+
+" Always show the statusline
+set laststatus=2
+
+" Explicitly set encoding to utf-8
+set encoding=utf-8
+
+" Column width indicator
+" set colorcolumn=+1
+
+" Lower the delay of escaping out of other modes
+set timeout timeoutlen=1000 ttimeoutlen=0
+
+" Turn backup off
+set nobackup
+set nowritebackup
+set noswapfile
+
+" Tab settings
+set expandtab
+set shiftwidth=2
+set tabstop=8
+set softtabstop=2
+set smarttab
+
+" Text display settings
+set linebreak
+" set textwidth=80
+set autoindent
+set nowrap
+set whichwrap+=h,l,<,>,[,]
+
+" Writes to the unnamed register also writes to the * and + registers. This
+" makes it easy to interact with the system clipboard
+if has ('unnamedplus')
+  set clipboard=unnamedplus
+else
+  set clipboard=unnamed
+endif
+
+" Cursor settings. This makes terminal vim sooo much nicer!
+" Tmux will only forward escape sequences to the terminal if surrounded by a DCS
+" sequence
+if exists('$TMUX')
+  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+else
+  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
+
+"===============================================================================
+" Leader Key Mappings
+"===============================================================================
+
+" Map leader and localleader key to comma
+let mapleader = ","
+let g:mapleader = ","
+let maplocalleader = ","
+let g:maplocalleader = ","
 
 
-" Neocomplcahce config
-let g:acp_enableAtStartup = 0
+"===============================================================================
+" Key Mappings
+"===============================================================================
+
+
+" Enable omni completion
+augroup MyAutoCmd
+  autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+  autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+  autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+  autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+  autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+  autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+  " autocmd FileType java setlocal omnifunc=eclim#java#complete#CodeComplete
+augroup END
+
+"===============================================================================
+" NERDTree
+"===============================================================================
+
+let NERDTreeShowBookmarks=1
+let NERDTreeShowHidden=1
+let NERDTreeIgnore=['\~$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
+" Close vim if the only window open is nerdtree
+autocmd MyAutoCmd BufEnter * 
+      \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
+
+"===============================================================================
+" NERDCommenter
+"===============================================================================
+
+" Always leave a space between the comment character and the comment
+let NERDSpaceDelims=1
+
+
+"===============================================================================
+" Neocomplcache and Neosnippets
+"===============================================================================
+
 " Use neocomplcache.
 let g:neocomplcache_enable_at_startup = 1
 " Use smartcase.
@@ -108,40 +315,20 @@ let g:neocomplcache_enable_smart_case = 1
 " Set minimum syntax keyword length.
 let g:neocomplcache_min_syntax_length = 3
 let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-" Enable heavy features.
-" Use camel case completion.
-let g:neocomplcache_enable_camel_case_completion = 1
-" Use underbar completion.
-let g:neocomplcache_enable_underbar_completion = 1
+let g:neocomplcache_enable_auto_close_preview = 1
 
 " Define dictionary.
 let g:neocomplcache_dictionary_filetype_lists = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-        \ }
+      \ 'default' : '',
+      \ 'vimshell' : $HOME.'/.vimshell_hist',
+      \ 'scheme' : $HOME.'/.gosh_completions'
+      \ }
 
 " Define keyword.
 if !exists('g:neocomplcache_keyword_patterns')
-    let g:neocomplcache_keyword_patterns = {}
+  let g:neocomplcache_keyword_patterns = {}
 endif
 let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
 
 " Plugin key-mappings.
 inoremap <expr><C-g>     neocomplcache#undo_completion()
@@ -151,9 +338,9 @@ inoremap <expr><C-l>     neocomplcache#complete_common_string()
 " <CR>: close popup and save indent.
 inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
 function! s:my_cr_function()
-  return neocomplcache#smart_close_popup() . "\<CR>"
+  " return neocomplcache#smart_close_popup() . "\<CR>"
   " For no inserting <CR> key.
-  "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+  return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
 endfunction
 " <TAB>: completion.
 inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
@@ -163,18 +350,186 @@ inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
 inoremap <expr><C-y>  neocomplcache#close_popup()
 inoremap <expr><C-e>  neocomplcache#cancel_popup()
 
-"haskell stuff
-let g:necoghc_enable_detailed_browse=1
-let g:ghc="/usr/bin/ghc"
-let g:haddock_browser="/usr/bin/chromium-browser"
+" Enable heavy omni completion.
+if !exists('g:neocomplcache_omni_patterns')
+  let g:neocomplcache_omni_patterns = {}
+endif
+if !exists('g:neocomplcache_force_omni_patterns')
+  let g:neocomplcache_force_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.php =
+      \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+let g:neocomplcache_omni_patterns.c =
+      \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
+let g:neocomplcache_omni_patterns.cpp =
+      \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
 
-au BufEnter *.hs compiler ghc
+" Plugin key-mappings.
+imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+xmap <C-k>     <Plug>(neosnippet_expand_target)
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+\ "\<Plug>(neosnippet_expand_or_jump)"
+\: "\<TAB>"
+
+" For snippet_complete marker.
+if has('conceal')
+  set conceallevel=2 concealcursor=i
+endif
 
 
-" press jj in insert mode to exit it
-:imap jj <Esc>
 
+"===============================================================================
+" Unite
+"===============================================================================
 
-" user ; instead of : for commands
-"nnoremap ; :
+" Use the fuzzy matcher for everything
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+
+" Use the rank sorter for everything
+call unite#filters#sorter_default#use(['sorter_rank'])
+
+" Set up some custom ignores
+call unite#custom_source('file_rec,file_rec/async,file_mru,file,buffer,grep',
+      \ 'ignore_pattern', join([
+      \ '\.git/',
+      \ 'git5/.*/review/',
+      \ 'google/obj/',
+      \ ], '\|'))
+
+" Map space to the prefix for Unite
+nnoremap [unite] <Nop>
+nmap <space> [unite]
+
+" General fuzzy search
+nnoremap <silent> [unite]<space> :<C-u>Unite
+      \ -buffer-name=files buffer file_mru file_rec/async<CR>
+
+" Quick registers
+" nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
+
+" Quick buffer and mru
+nnoremap <silent> [unite]b :<C-u>Unite -buffer-name=buffers buffer file_mru<CR>
+
+" Quick yank history
+nnoremap <silent> [unite]y :<C-u>Unite -buffer-name=yanks history/yank<CR>
+
+" Quick outline
+nnoremap <silent> [unite]o :<C-u>Unite -buffer-name=outline -vertical outline<CR>
+
+" Quick sessions (projects)
+" nnoremap <silent> [unite]p :<C-u>Unite -buffer-name=sessions session<CR>
+
+" Quick sources
+" nnoremap <silent> [unite]a :<C-u>Unite -buffer-name=sources source<CR>
+
+" Quick snippet
+nnoremap <silent> [unite]s :<C-u>Unite -buffer-name=snippets snippet<CR>
+
+" Quickly switch lcd
+nnoremap <silent> [unite]d
+      \ :<C-u>Unite -buffer-name=change-cwd -default-action=lcd directory_mru<CR>
+
+" Quick file search
+nnoremap <silent> [unite]f :<C-u>Unite -buffer-name=files file_rec/async file/new<CR>
+
+" Quick grep from cwd
+" nnoremap <silent> [unite]g :<C-u>Unite -buffer-name=grep grep:.<CR>
+
+" Quick help
+" nnoremap <silent> [unite]h :<C-u>Unite -buffer-name=help help<CR>
+
+" Quick line using the word under cursor
+" nnoremap <silent> [unite]l :<C-u>UniteWithCursorWord -buffer-name=search_file line<CR>
+nnoremap <silent> [unite]l :<C-u>Unite -buffer-name=line line<CR>
+
+" Quick MRU search
+" nnoremap <silent> [unite]m :<C-u>Unite -buffer-name=mru file_mru<CR>
+
+" Quick find
+" nnoremap <silent> [unite]n :<C-u>Unite -buffer-name=find find:.<CR>
+
+" Quick commands
+" nnoremap <silent> [unite]c :<C-u>Unite -buffer-name=commands command<CR>
+
+" Quick bookmarks
+" nnoremap <silent> [unite]b :<C-u>Unite -buffer-name=bookmarks bookmark<CR>
+
+" Fuzzy search from current buffer
+" nnoremap <silent> [unite]b :<C-u>UniteWithBufferDir
+      " \ -buffer-name=files -prompt=%\  buffer file_mru bookmark file<CR>
+
+" Quick commands
+" nnoremap <silent> [unite]; :<C-u>Unite -buffer-name=history history/command command<CR>
+
+" Custom Unite settings
+autocmd MyAutoCmd FileType unite call s:unite_settings()
+function! s:unite_settings()
+
+  nmap <buffer> <ESC> <Plug>(unite_exit)
+  imap <buffer> <ESC> <Plug>(unite_exit)
+  " imap <buffer> <c-j> <Plug>(unite_select_next_line)
+  imap <buffer> <c-j> <Plug>(unite_insert_leave)
+  nmap <buffer> <c-j> <Plug>(unite_loop_cursor_down)
+  nmap <buffer> <c-k> <Plug>(unite_loop_cursor_up)
+  imap <buffer> <c-a> <Plug>(unite_choose_action)
+  imap <buffer> <Tab> <Plug>(unite_exit_insert)
+  imap <buffer> jj <Plug>(unite_insert_leave)
+  imap <buffer> <C-w> <Plug>(unite_delete_backward_word)
+  imap <buffer> <C-u> <Plug>(unite_delete_backward_path)
+  imap <buffer> '     <Plug>(unite_quick_match_default_action)
+  nmap <buffer> '     <Plug>(unite_quick_match_default_action)
+  nmap <buffer> <C-r> <Plug>(unite_redraw)
+  imap <buffer> <C-r> <Plug>(unite_redraw)
+  inoremap <silent><buffer><expr> <C-s> unite#do_action('split')
+  nnoremap <silent><buffer><expr> <C-s> unite#do_action('split')
+  inoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+  nnoremap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+
+  let unite = unite#get_current_unite()
+  if unite.buffer_name =~# '^search'
+    nnoremap <silent><buffer><expr> r     unite#do_action('replace')
+  else
+    nnoremap <silent><buffer><expr> r     unite#do_action('rename')
+  endif
+
+  nnoremap <silent><buffer><expr> cd     unite#do_action('lcd')
+
+  " Using Ctrl-\ to trigger outline, so close it using the same keystroke
+  if unite.buffer_name =~# '^outline'
+    imap <buffer> <C-\> <Plug>(unite_exit)
+  endif
+
+  " Using Ctrl-/ to trigger line, close it using same keystroke
+  if unite.buffer_name =~# '^search_file'
+    imap <buffer> <C-_> <Plug>(unite_exit)
+  endif
+endfunction
+
+" Start in insert mode
+let g:unite_enable_start_insert = 1
+
+" Enable short source name in window
+" let g:unite_enable_short_source_names = 1
+
+" Enable history yank source
+let g:unite_source_history_yank_enable = 1
+
+" Open in bottom right
+let g:unite_split_rule = "botright"
+
+" Shorten the default update date of 500ms
+let g:unite_update_time = 200
+
+let g:unite_source_file_mru_limit = 1000
+let g:unite_cursor_line_highlight = 'TabLineSel'
+" let g:unite_abbr_highlight = 'TabLine'
+
+let g:unite_source_file_mru_filename_format = ':~:.'
+let g:unite_source_file_mru_time_format = ''
 
