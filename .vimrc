@@ -76,6 +76,7 @@ NeoBundle 'nanotech/jellybeans.vim'
 NeoBundle 'Shougo/neocomplcache-clang'
 
 " Haskell GHC completition
+NeoBundle 'lukerandall/haskellmode-vim'
 NeoBundle 'ujihisa/neco-ghc'
 
 filetype plugin indent on
@@ -112,14 +113,24 @@ set splitbelow
 " 256bit terminal
 set t_Co=256
 
-" Colorscheme
-colorscheme solarized
 
-" Tell Vim to use dark background
-set background=light
 
-" Set Font
-set guifont=Monospace\ 13
+let os=substitute(system('uname'), '\n', '', '')
+if os == 'Darwin' || os == 'Mac'
+    set guifont=Monaco:h13
+    " Colorscheme
+    colorscheme jellybeans
+elseif os == 'Linux'
+    " Set Font
+    set guifont=Monospace\ 13
+
+    " Colorscheme
+    colorscheme solarized
+
+    " Tell Vim to use dark background
+    set background=light
+endif
+
 
 " Sets how many lines of history vim has to remember
 set history=10000
