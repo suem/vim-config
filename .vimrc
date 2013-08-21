@@ -36,10 +36,10 @@ NeoBundle 'Shougo/neocomplcache'
 NeoBundle 'Shougo/neosnippet'
 
 " Comments
-NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'tpope/vim-commentary'
 
 " Close Paris
-NeoBundle 'Townk/vim-autoclose'
+NeoBundle 'kana/vim-smartinput'
 
 " File browsing
 NeoBundle 'scrooloose/nerdtree'
@@ -425,7 +425,7 @@ nnoremap <silent> [unite]<space> :<C-u>Unite
 " nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
 
 " Quick buffer and mru
-nnoremap <silent> [unite]b :<C-u>Unite -buffer-name=buffers buffer file_mru<CR>
+noremap <silent> [unite]b :<C-u>Unite -buffer-name=buffers buffer file_mru<CR>
 
 " Quick yank history
 nnoremap <silent> [unite]y :<C-u>Unite -buffer-name=yanks history/yank<CR>
@@ -444,7 +444,9 @@ nnoremap <silent> [unite]s :<C-u>Unite -buffer-name=snippets snippet<CR>
 
 " Quickly switch lcd
 nnoremap <silent> [unite]d
-      \ :<C-u>Unite -buffer-name=change-cwd -default-action=lcd directory_mru<CR>
+      \ :<C-u>Unite -buffer-name=directory_mru -default-action=lcd directory_mru<CR>
+nnoremap <silent> [unite]D
+      \ :<C-u>Unite -buffer-name=directory directory<CR>
 
 " Quick file search
 nnoremap <silent> [unite]f :<C-u>Unite -buffer-name=files file_rec/async file/new<CR>
@@ -456,7 +458,7 @@ nnoremap <silent> [unite]f :<C-u>Unite -buffer-name=files file_rec/async file/ne
 " nnoremap <silent> [unite]h :<C-u>Unite -buffer-name=help help<CR>
 
 " Quick line using the word under cursor
-" nnoremap <silent> [unite]l :<C-u>UniteWithCursorWord -buffer-name=search_file line<CR>
+nnoremap <silent> [unite]L :<C-u>UniteWithCursorWord -buffer-name=search_file line<CR>
 nnoremap <silent> [unite]l :<C-u>Unite -buffer-name=line line<CR>
 
 " Quick MRU search
@@ -473,7 +475,7 @@ nnoremap <silent> [unite]l :<C-u>Unite -buffer-name=line line<CR>
 
 " Fuzzy search from current buffer
 " nnoremap <silent> [unite]b :<C-u>UniteWithBufferDir
-      " \ -buffer-name=files -prompt=%\  buffer file_mru bookmark file<CR>
+"       \ -buffer-name=files -prompt=%\  buffer file_mru bookmark file<CR>
 
 " Quick commands
 " nnoremap <silent> [unite]; :<C-u>Unite -buffer-name=history history/command command<CR>
@@ -489,7 +491,7 @@ function! s:unite_settings()
   nmap <buffer> <c-j> <Plug>(unite_loop_cursor_down)
   nmap <buffer> <c-k> <Plug>(unite_loop_cursor_up)
   imap <buffer> <c-a> <Plug>(unite_choose_action)
-  imap <buffer> <Tab> <Plug>(unite_exit_insert)
+  " imap <buffer> <Tab> <Plug>(unite_exit_insert)
   imap <buffer> jj <Plug>(unite_insert_leave)
   imap <buffer> <C-w> <Plug>(unite_delete_backward_word)
   imap <buffer> <C-u> <Plug>(unite_delete_backward_path)
