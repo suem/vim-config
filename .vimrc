@@ -29,10 +29,14 @@ NeoBundle 'Shougo/unite-help'
 NeoBundle 'Shougo/unite-session'
 NeoBundle 'thinca/vim-unite-history'
 
+
+
 " Code completion
 NeoBundle 'Shougo/neocomplcache'
+" NeoBundle 'Valloric/YouCompleteMe'
 
 " Snippets
+" NeoBundle 'SirVer/ultisnips'
 NeoBundle 'Shougo/neosnippet'
 
 " Comments
@@ -78,6 +82,11 @@ NeoBundle 'Shougo/neocomplcache-clang'
 " Haskell GHC completition
 NeoBundle 'lukerandall/haskellmode-vim'
 NeoBundle 'ujihisa/neco-ghc'
+
+
+" Octave/Matlab
+NeoBundle 'octave.vim'
+
 
 filetype plugin indent on
 syntax enable
@@ -293,6 +302,8 @@ augroup MyAutoCmd
   autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
   autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+  autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+  autocmd FileType octave setlocal omnifunc=syntaxcomplete#Complete
   " autocmd FileType java setlocal omnifunc=eclim#java#complete#CodeComplete
 augroup END
 
@@ -314,6 +325,16 @@ autocmd MyAutoCmd BufEnter *
 " Always leave a space between the comment character and the comment
 let NERDSpaceDelims=1
 
+"===============================================================================
+" YCM
+"===============================================================================
+" let g:ycm_confirm_extra_conf = 0
+
+
+"===============================================================================
+" UltiSnips
+"===============================================================================
+" let g:UltiSnipsExpandTrigger="<c-j>"
 
 "===============================================================================
 " Neocomplcache and Neosnippets
@@ -546,3 +567,8 @@ let g:unite_cursor_line_highlight = 'TabLineSel'
 let g:unite_source_file_mru_filename_format = ':~:.'
 let g:unite_source_file_mru_time_format = ''
 
+"===============================================================================
+" Haskell Stuff
+"===============================================================================
+
+let g:haddock_browser="/usr/bin/xdg-open"
