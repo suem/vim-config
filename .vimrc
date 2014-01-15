@@ -1,4 +1,3 @@
-
 " Disable vi-compatibility
 set nocompatible
 
@@ -32,12 +31,13 @@ NeoBundle 'thinca/vim-unite-history'
 
 
 " Code completion
-NeoBundle 'Shougo/neocomplcache'
-" NeoBundle 'Valloric/YouCompleteMe'
+" NeoBundle 'Shougo/neocomplcache'
+NeoBundle 'Valloric/YouCompleteMe'
+
 
 " Snippets
-" NeoBundle 'SirVer/ultisnips'
-NeoBundle 'Shougo/neosnippet'
+NeoBundle 'SirVer/ultisnips'
+"NeoBundle 'Shougo/neosnippet'
 
 " Comments
 NeoBundle 'tpope/vim-commentary'
@@ -56,7 +56,7 @@ NeoBundle 'tpope/vim-fugitive'
 
 " Motions
 "NeoBundle 'Lokaltog/vim-easymotion'
-"NeoBundle 'goldfeld/vim-seek'
+NeoBundle 'goldfeld/vim-seek'
 
 " Text Objects
 NeoBundle 'tpope/vim-surround'
@@ -87,6 +87,8 @@ NeoBundle 'ujihisa/neco-ghc'
 " Octave/Matlab
 NeoBundle 'octave.vim'
 
+" LaTeX
+NeoBundle 'LaTeX-Box-Team/LaTeX-Box'
 
 filetype plugin indent on
 syntax enable
@@ -112,7 +114,12 @@ set virtualedit=onemore
 " Turn on line number
 set number
 
-"
+inoremap jj <ESC>
+
+"relative line numbering on focus
+set relativenumber
+
+" Hilight current line
 set cursorline
 
 " Always splits to the right and below
@@ -138,6 +145,7 @@ elseif os == 'Linux'
 
     " Tell Vim to use dark background
     set background=light
+    " set background=dark
 endif
 
 
@@ -303,9 +311,24 @@ augroup MyAutoCmd
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
   autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
   autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+  autocmd FileType matlab setlocal omnifunc=syntaxcomplete#Complete
   autocmd FileType octave setlocal omnifunc=syntaxcomplete#Complete
-  " autocmd FileType java setlocal omnifunc=eclim#java#complete#CodeComplete
+  autocmd FileType java setlocal omnifunc=eclim#java#complete#CodeComplete
 augroup END
+
+
+
+"===============================================================================
+" Tag files
+"===============================================================================
+set tags+=~/.matlabtags
+
+
+"===============================================================================
+" Seek
+"===============================================================================
+let g:seek_enable_jumps = 1
+
 
 "===============================================================================
 " NERDTree
@@ -318,6 +341,15 @@ let NERDTreeIgnore=['\~$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
 autocmd MyAutoCmd BufEnter * 
       \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
+
+"===============================================================================
+" Matlab
+"===============================================================================
+" augroup filetypedetect
+"     au! BufRead,BufNewFile *.m,*.oct set filetype=octave
+" augroup END
+
+
 "===============================================================================
 " NERDCommenter
 "===============================================================================
@@ -326,93 +358,111 @@ autocmd MyAutoCmd BufEnter *
 let NERDSpaceDelims=1
 
 "===============================================================================
+" Eclim
+"===============================================================================
+
+let g:EclimCompletionMethod = 'omnifunc'
+
+
+"===============================================================================
+" Latex
+"===============================================================================
+let g:tex_conceal = ""
+autocmd Filetype tex nmap ZZ :w \| :Latexmk <CR>
+
+"===============================================================================
 " YCM
 "===============================================================================
-" let g:ycm_confirm_extra_conf = 0
-
+let g:ycm_confirm_extra_conf = 0
+let g:ycm_collect_identifiers_from_tags_files = 1
+" let g:ycm_autoclose_preview_window_after_insertion = 1
+" let g:ycm_autoclose_preview_window_after_completion = 1
+" let g:ycm_add_preview_to_completeopt = 1
 
 "===============================================================================
 " UltiSnips
 "===============================================================================
-" let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsExpandTrigger="<c-j>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
 
 "===============================================================================
 " Neocomplcache and Neosnippets
 "===============================================================================
 
-" Use neocomplcache.
-let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
-" Set minimum syntax keyword length.
-let g:neocomplcache_min_syntax_length = 3
-let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-let g:neocomplcache_enable_auto_close_preview = 1
+" " Use neocomplcache.
+" let g:neocomplcache_enable_at_startup = 0
+" " Use smartcase.
+" let g:neocomplcache_enable_smart_case = 1
+" " Set minimum syntax keyword length.
+" let g:neocomplcache_min_syntax_length = 3
+" let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+" let g:neocomplcache_enable_auto_close_preview = 1
 
-" Define dictionary.
-let g:neocomplcache_dictionary_filetype_lists = {
-      \ 'default' : '',
-      \ 'vimshell' : $HOME.'/.vimshell_hist',
-      \ 'scheme' : $HOME.'/.gosh_completions'
-      \ }
+" " Define dictionary.
+" let g:neocomplcache_dictionary_filetype_lists = {
+"       \ 'default' : '',
+"       \ 'vimshell' : $HOME.'/.vimshell_hist',
+"       \ 'scheme' : $HOME.'/.gosh_completions'
+"       \ }
 
-" Define keyword.
-if !exists('g:neocomplcache_keyword_patterns')
-  let g:neocomplcache_keyword_patterns = {}
-endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+" " Define keyword.
+" if !exists('g:neocomplcache_keyword_patterns')
+"   let g:neocomplcache_keyword_patterns = {}
+" endif
+" let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 
-" Plugin key-mappings.
-inoremap <expr><C-g>     neocomplcache#undo_completion()
-inoremap <expr><C-l>     neocomplcache#complete_common_string()
+" " Plugin key-mappings.
+" inoremap <expr><C-g>     neocomplcache#undo_completion()
+" inoremap <expr><C-l>     neocomplcache#complete_common_string()
 
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-function! s:my_cr_function()
-  " return neocomplcache#smart_close_popup() . "\<CR>"
-  " For no inserting <CR> key.
-  return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-endfunction
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
+" " Recommended key-mappings.
+" " <CR>: close popup and save indent.
+" inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
+" function! s:my_cr_function()
+"   " return neocomplcache#smart_close_popup() . "\<CR>"
+"   " For no inserting <CR> key.
+"   return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
+" endfunction
+" " <TAB>: completion.
+" inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" " <C-h>, <BS>: close popup and delete backword char.
+" inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+" inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+" inoremap <expr><C-y>  neocomplcache#close_popup()
+" inoremap <expr><C-e>  neocomplcache#cancel_popup()
 
-" Enable heavy omni completion.
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
-endif
-if !exists('g:neocomplcache_force_omni_patterns')
-  let g:neocomplcache_force_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.php =
-      \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-let g:neocomplcache_omni_patterns.c =
-      \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
-let g:neocomplcache_omni_patterns.cpp =
-      \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+" " Enable heavy omni completion.
+" if !exists('g:neocomplcache_omni_patterns')
+"   let g:neocomplcache_omni_patterns = {}
+" endif
+" if !exists('g:neocomplcache_force_omni_patterns')
+"   let g:neocomplcache_force_omni_patterns = {}
+" endif
+" let g:neocomplcache_omni_patterns.php =
+"       \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
+" let g:neocomplcache_omni_patterns.c =
+"       \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
+" let g:neocomplcache_omni_patterns.cpp =
+"       \ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
 
-" Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
+" " Plugin key-mappings.
+" imap <C-k>     <Plug>(neosnippet_expand_or_jump)
+" smap <C-k>     <Plug>(neosnippet_expand_or_jump)
+" xmap <C-k>     <Plug>(neosnippet_expand_target)
 
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
+" " SuperTab like snippets behavior.
+" imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+" \ "\<Plug>(neosnippet_expand_or_jump)"
+" \: pumvisible() ? "\<C-n>" : "\<TAB>"
+" smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+" \ "\<Plug>(neosnippet_expand_or_jump)"
+" \: "\<TAB>"
 
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
+" " For snippet_complete marker.
+" if has('conceal')
+"   set conceallevel=2 concealcursor=i
+" endif
 
 
 
@@ -439,8 +489,8 @@ nnoremap [unite] <Nop>
 nmap <space> [unite]
 
 " General fuzzy search
-nnoremap <silent> [unite]<space> :<C-u>Unite
-      \ -buffer-name=files buffer file_mru file_rec/async<CR>
+" nnoremap <silent> [unite]<space> :<C-u>Unite
+"       \ -buffer-name=files buffer file_mru file_rec/async<CR>
 
 " Quick registers
 " nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
