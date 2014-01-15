@@ -28,7 +28,8 @@ NeoBundle 'Shougo/unite-help'
 NeoBundle 'Shougo/unite-session'
 NeoBundle 'thinca/vim-unite-history'
 
-
+" Hilight search and replace
+NeoBundle 'osyo-manga/vim-over'
 
 " Code completion
 " NeoBundle 'Shougo/neocomplcache'
@@ -56,7 +57,7 @@ NeoBundle 'tpope/vim-fugitive'
 
 " Motions
 "NeoBundle 'Lokaltog/vim-easymotion'
-NeoBundle 'goldfeld/vim-seek'
+NeoBundle 'justinmk/vim-sneak'
 
 " Text Objects
 NeoBundle 'tpope/vim-surround'
@@ -322,12 +323,6 @@ augroup END
 " Tag files
 "===============================================================================
 set tags+=~/.matlabtags
-
-
-"===============================================================================
-" Seek
-"===============================================================================
-let g:seek_enable_jumps = 1
 
 
 "===============================================================================
