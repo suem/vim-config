@@ -139,14 +139,16 @@ if os == 'Darwin' || os == 'Mac'
     colorscheme jellybeans
 elseif os == 'Linux'
     " Set Font
-    set guifont=Monospace\ 13
+    set guifont=Droid\ Sans\ Mono\ 12
+    " set guifont=Monospace\ 13
 
     " Colorscheme
     colorscheme solarized
+    " colorscheme jellybeans
 
     " Tell Vim to use dark background
-    set background=light
-    " set background=dark
+    " set background=light
+    set background=dark
 endif
 
 
