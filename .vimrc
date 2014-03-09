@@ -27,6 +27,7 @@ NeoBundle 'Shougo/unite-outline'
 NeoBundle 'Shougo/unite-help'
 NeoBundle 'Shougo/unite-session'
 NeoBundle 'thinca/vim-unite-history'
+NeoBundle 'Shougo/neomru.vim'
 
 " Hilight search and replace
 NeoBundle 'osyo-manga/vim-over'
@@ -71,7 +72,7 @@ NeoBundle 'kana/vim-textobj-indent' " ai, ii, aI, iI
 NeoBundle 'lucapette/vim-textobj-underscore' " a_, i_
 
 " Status line
-"NeoBundle 'bling/vim-airline'
+NeoBundle 'bling/vim-airline'
 " NeoBundle 'maciakl/vim-neatstatus'
 
 " Color themems
@@ -328,6 +329,10 @@ augroup END
 "===============================================================================
 set tags+=~/.matlabtags
 
+"===============================================================================
+" Airline
+"===============================================================================
+ let g:airline_powerline_fonts=1
 
 "===============================================================================
 " NERDTree
