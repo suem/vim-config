@@ -84,9 +84,8 @@ NeoBundle 'osyo-manga/vim-marching'
 NeoBundle 'osyo-manga/vim-reunions'
 
 " Haskell GHC completition
-NeoBundle 'lukerandall/haskellmode-vim'
-NeoBundle 'ujihisa/neco-ghc'
-
+NeoBundle 'eagletmt/neco-ghc'
+NeoBundle 'eagletmt/ghcmod-vim'
 
 " Octave/Matlab
 NeoBundle 'octave.vim'
@@ -150,8 +149,8 @@ elseif os == 'Linux'
     " colorscheme jellybeans
 
     " Tell Vim to use dark background
-    " set background=light
-    set background=dark
+    set background=light
+    " set background=dark
 endif
 
 
@@ -332,7 +331,10 @@ set tags+=~/.matlabtags
 "===============================================================================
 " Airline
 "===============================================================================
- let g:airline_powerline_fonts=1
+ let g:airline_powerline_fonts=0
+ let g:airline_left_sep=''
+ let g:airline_right_sep=''
+
 
 "===============================================================================
 " NERDTree
@@ -342,7 +344,7 @@ let NERDTreeShowBookmarks=1
 let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\~$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
 " Close vim if the only window open is nerdtree
-autocmd MyAutoCmd BufEnter * 
+autocmd MyAutoCmd BufEnter *
       \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
 
 
@@ -435,7 +437,7 @@ inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
 inoremap <expr><C-y>  neocomplete#close_popup()
 inoremap <expr><C-e>  neocomplete#cancel_popup()
 " Close popup by <Space>.
-inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
+"inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
 
 " Enable heavy omni completion.
 if !exists('g:neocomplete#sources#omni#input_patterns')
@@ -628,5 +630,4 @@ let g:unite_source_file_mru_time_format = ''
 "===============================================================================
 " Haskell Stuff
 "===============================================================================
-
-let g:haddock_browser="/usr/bin/xdg-open"
+let g:necoghc_enable_detailed_browse = 1
