@@ -54,8 +54,12 @@ NeoBundle 'scrooloose/nerdtree'
 " Syntax checker
 NeoBundle 'scrooloose/syntastic'
 
+" Editor Config
+NeoBundle 'editorconfig/editorconfig-vim'
+
 " Git
 NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'airblade/vim-gitgutter'
 
 " Motions
 "NeoBundle 'Lokaltog/vim-easymotion'
@@ -93,6 +97,10 @@ NeoBundle 'octave.vim'
 " LaTeX
 NeoBundle 'LaTeX-Box-Team/LaTeX-Box'
 
+" Javascript
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'mxw/vim-jsx'
+
 filetype plugin indent on
 syntax enable
 
@@ -117,6 +125,7 @@ set virtualedit=onemore
 " Turn on line number
 set number
 
+" Exit insert mode with jj
 inoremap jj <ESC>
 
 "relative line numbering on focus
@@ -129,30 +138,21 @@ set cursorline
 set splitright
 set splitbelow
 
-" 256bit terminal
-set t_Co=256
-
-
+" Colorscheme
+colorscheme solarized
+set background=light
+" set background=dark
+let g:solarized_bold = 0
+let g:solarized_underline = 0
+let g:solarized_italic = 0
+let g:solarized_visibility = 'high'
 
 let os=substitute(system('uname'), '\n', '', '')
 if os == 'Darwin' || os == 'Mac'
     set guifont=Monaco:h13
-    " Colorscheme
-    colorscheme jellybeans
 elseif os == 'Linux'
-    " Set Font
-    set guifont=Droid\ Sans\ Mono\ 12
-    " set guifont=Monospace\ 13
-
-    " Colorscheme
-    colorscheme solarized
-    " colorscheme jellybeans
-
-    " Tell Vim to use dark background
-    set background=light
-    " set background=dark
+    set guifont=Droid\ Sans\ Mono\ 11
 endif
-
 
 " Sets how many lines of history vim has to remember
 set history=10000
@@ -166,20 +166,20 @@ set guioptions-=T  "remove toolbar
 set guioptions-=r  "remove right-hand scroll bar
 
 " Display unprintable chars
-set list
-set listchars=tab:▸\ ,extends:❯,precedes:❮,nbsp:␣
-set showbreak=↪
+" set list
+" set listchars=tab:▸\ ,extends:❯,precedes:❮,nbsp:␣
+" set showbreak=↪
 
 " listchar=trail is not as flexible, use the below to highlight trailing
 " whitespace. Don't do it for unite windows or readonly files
-highlight ExtraWhitespace ctermbg=red guibg=red
-match ExtraWhitespace /\s\+$/
-augroup MyAutoCmd
-  autocmd BufWinEnter * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+$/ | endif
-  autocmd InsertEnter * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+\%#\@<!$/ | endif
-  autocmd InsertLeave * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+$/ | endif
-  autocmd BufWinLeave * if &modifiable && &ft!='unite' | call clearmatches() | endif
-augroup END
+" highlight ExtraWhitespace ctermbg=red guibg=red
+" match ExtraWhitespace /\s\+$/
+" augroup MyAutoCmd
+"   autocmd BufWinEnter * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+$/ | endif
+"   autocmd InsertEnter * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+\%#\@<!$/ | endif
+"   autocmd InsertLeave * if &modifiable && &ft!='unite' | match ExtraWhitespace /\s\+$/ | endif
+"   autocmd BufWinLeave * if &modifiable && &ft!='unite' | call clearmatches() | endif
+" augroup END
 
 " Minimal number of screen lines to keep above and below the cursor
 set scrolloff=10
@@ -232,7 +232,7 @@ set incsearch
 set magic
 
 " Don't show matching brackets
-set noshowmatch
+" set noshowmatch
 
 " Show incomplete commands
 set showcmd
@@ -494,9 +494,29 @@ call unite#custom_source('file_rec,file_rec/async,file_mru,file,buffer,grep',
       \ 'google/obj/',
       \ ], '\|'))
 
+" use the silver searcher
+let g:unite_source_grep_command='ag'
+let g:unite_source_grep_default_opts='--nocolor --nogroup --hidden'
+let g:unite_source_grep_recursive_opt=''
+
+" Mappings
+
+nnoremap <space>f :<C-u>Unite -buffer-name=files file_rec/async file/new<CR>
+nnoremap <space>b :<C-u>Unite -buffer-name=buffer<CR>
+nnoremap <space><space> :<C-u>Unite -buffer-name=buffer file_mru<CR>
+nnoremap <C-p> :<C-u>Unite -buffer-name=buffer file file_mru file_rec/async<CR>
+nnoremap <space>o :<C-u>Unite -buffer-name=outline -vertical outline<CR>
+nnoremap <space>l :<C-u>Unite -buffer-name=line line<CR>
+nnoremap <space>; :<C-u>Unite -buffer-name=history history/command command<CR>
+nnoremap <space>g :<C-u>Unite -buffer-name=ag grep:.<CR>
+nnoremap <space>G :<C-u>UniteWithCursorWord -buffer-name=ag grep:.<CR>
+
+nnoremap <space>d :<C-u>Unite -buffer-name=directory_mru -default-action=lcd directory_mru<CR>
+" nnoremap <space>n :<C-u>Unite -buffer-name=find find:.<CR>
+
 " Map space to the prefix for Unite
-nnoremap [unite] <Nop>
-nmap <space> [unite]
+" nnoremap [unite] <Nop>
+" nmap <space> [unite]
 
 " General fuzzy search
 " nnoremap <silent> [unite]<space> :<C-u>Unite
@@ -506,13 +526,13 @@ nmap <space> [unite]
 " nnoremap <silent> [unite]r :<C-u>Unite -buffer-name=register register<CR>
 
 " Quick buffer and mru
-noremap <silent> [unite]b :<C-u>Unite -buffer-name=buffers buffer file_mru<CR>
+" noremap <silent> [unite]b :<C-u>Unite -buffer-name=buffers buffer file_mru<CR>
 
-" Quick yank history
-nnoremap <silent> [unite]y :<C-u>Unite -buffer-name=yanks history/yank<CR>
+" " Quick yank history
+" nnoremap <silent> [unite]y :<C-u>Unite -buffer-name=yanks history/yank<CR>
 
-" Quick outline
-nnoremap <silent> [unite]o :<C-u>Unite -buffer-name=outline -vertical outline<CR>
+" " Quick outline
+" nnoremap <silent> [unite]o :<C-u>Unite -buffer-name=outline -vertical outline<CR>
 
 " Quick sessions (projects)
 " nnoremap <silent> [unite]p :<C-u>Unite -buffer-name=sessions session<CR>
@@ -521,16 +541,16 @@ nnoremap <silent> [unite]o :<C-u>Unite -buffer-name=outline -vertical outline<CR
 " nnoremap <silent> [unite]a :<C-u>Unite -buffer-name=sources source<CR>
 
 " Quick snippet
-nnoremap <silent> [unite]s :<C-u>Unite -buffer-name=snippets snippet<CR>
+" nnoremap <silent> [unite]s :<C-u>Unite -buffer-name=snippets snippet<CR>
 
-" Quickly switch lcd
-nnoremap <silent> [unite]d
-      \ :<C-u>Unite -buffer-name=directory_mru -default-action=lcd directory_mru<CR>
-nnoremap <silent> [unite]D
-      \ :<C-u>Unite -buffer-name=directory directory<CR>
+" " Quickly switch lcd
+" nnoremap <silent> [unite]d
+"       \ :<C-u>Unite -buffer-name=directory_mru -default-action=lcd directory_mru<CR>
+" nnoremap <silent> [unite]D
+"       \ :<C-u>Unite -buffer-name=directory directory<CR>
 
-" Quick file search
-nnoremap <silent> [unite]f :<C-u>Unite -buffer-name=files file_rec/async file/new<CR>
+" " Quick file search
+" nnoremap <silent> [unite]f :<C-u>Unite -buffer-name=files file_rec/async file/new<CR>
 
 " Quick grep from cwd
 " nnoremap <silent> [unite]g :<C-u>Unite -buffer-name=grep grep:.<CR>
@@ -539,8 +559,8 @@ nnoremap <silent> [unite]f :<C-u>Unite -buffer-name=files file_rec/async file/ne
 " nnoremap <silent> [unite]h :<C-u>Unite -buffer-name=help help<CR>
 
 " Quick line using the word under cursor
-nnoremap <silent> [unite]L :<C-u>UniteWithCursorWord -buffer-name=search_file line<CR>
-nnoremap <silent> [unite]l :<C-u>Unite -buffer-name=line line<CR>
+" nnoremap <silent> [unite]L :<C-u>UniteWithCursorWord -buffer-name=search_file line<CR>
+" nnoremap <silent> [unite]l :<C-u>Unite -buffer-name=line line<CR>
 
 " Quick MRU search
 " nnoremap <silent> [unite]m :<C-u>Unite -buffer-name=mru file_mru<CR>
