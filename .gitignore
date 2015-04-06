@@ -1,5 +1,1 @@
-.VimballRecord
-.netrwhist
-systags
-bundle/
-haskellmode.config
+bundle/**
