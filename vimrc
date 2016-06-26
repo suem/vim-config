@@ -1,87 +1,39 @@
 "===============================================================================
-" Vundle
+" vim-plug 
 "===============================================================================
 
-set nocompatible
-filetype off
+call plug#begin('~/.vim/plugged')
 
-" set the runtime path to include Vundle and initialize
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
+Plug 'tpope/vim-commentary'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'altercation/vim-colors-solarized'
+Plug 'scrooloose/syntastic'
+Plug 'justinmk/vim-sneak'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'lervag/vimtex'
+Plug 'ajh17/VimCompletesMe'
 
-" File navigation
-Plugin 'kien/ctrlp.vim'
-Plugin 'tacahiroy/ctrlp-funky'
+call plug#end()
 
-" Autocomplete
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'ervandew/supertab'
+" "===============================================================================
+" " General Settings
+" "===============================================================================
 
-" Snippets
-Plugin 'SirVer/ultisnips'
-Plugin 'honza/vim-snippets'
+" disable VI compability
+set nocompatible 
 
-" Show indent levels
-Plugin 'nathanaelkane/vim-indent-guides'
-
-" Comments
-Plugin 'tpope/vim-commentary'
-
-" Close Paris
-Plugin 'kana/vim-smartinput'
-
-" File browsing
-Plugin 'scrooloose/nerdtree'
-
-" Syntax checker
-Plugin 'scrooloose/syntastic'
-
-" Ruby
-Plugin 'vim-ruby/vim-ruby'
-Plugin 'tpope/vim-rails'
-Plugin 'tpope/vim-haml'
-
-" Text Motion
-Plugin 'justinmk/vim-sneak'
-
-" Autosave Files
-Plugin 'vim-scripts/vim-auto-save'
-
-" Git
-Plugin 'tpope/vim-fugitive'
-Plugin 'airblade/vim-gitgutter'
-
-" Text Objects
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-repeat'
-
-" Status line
-Plugin 'bling/vim-airline'
-
-" Color themems
-Plugin 'altercation/vim-colors-solarized'
-Plugin 'nanotech/jellybeans.vim'
-Plugin 'ajh17/Spacegray.vim'
-
-" Haskell GHC completition
-Plugin 'eagletmt/neco-ghc'
-Plugin 'eagletmt/ghcmod-vim'
-
-" LaTeX
-Plugin 'LaTeX-Box-Team/LaTeX-Box'
-
-
-call vundle#end()
-filetype plugin indent on 
-syntax enable
-
-
-"===============================================================================
-" General Settings
-"===============================================================================
-
+" enable syntax hilighting
 syntax on
 
+" filetype specific settings on
+filetype plugin indent on
+
+" performance boost
+set ttyfast 
 set lazyredraw
 
 " Solid line for vsplit separator
@@ -93,20 +45,17 @@ set virtualedit=onemore
 " Turn on line number
 set number
 
-
 "relative line numbering on focus
 set relativenumber
 
 " Hilight current line
-" set cursorline
+set cursorline
 
 " Always splits to the right and below
 set splitright
 set splitbelow
 
 " Colorscheme
-" colorscheme jellybeans
-" colorscheme spacegray
 
 colorscheme solarized
 set background=light
@@ -115,13 +64,6 @@ let g:solarized_bold = 0
 let g:solarized_underline = 0
 let g:solarized_italic = 0
 let g:solarized_visibility = 'high'
-
-let os=substitute(system('uname'), '\n', '', '')
-if os == 'Darwin' || os == 'Mac'
-    set guifont=Monaco:h13
-elseif os == 'Linux'
-    set guifont=Droid\ Sans\ Mono\ 11
-endif
 
 " Sets how many lines of history vim has to remember
 set history=10000
@@ -205,12 +147,11 @@ set nobackup
 set nowritebackup
 set noswapfile
 
-" Tab settings
+" Tab settings, 1 tab == 4 spaces
 set expandtab
-set shiftwidth=2
-set tabstop=8
-set softtabstop=2
 set smarttab
+set shiftwidth=4
+set tabstop=4
 
 " Text display settings
 set linebreak
@@ -226,17 +167,6 @@ else
   set clipboard=unnamed
 endif
 
-" Cursor settings. This makes terminal vim sooo much nicer!
-" Tmux will only forward escape sequences to the terminal if surrounded by a DCS
-" sequence
-if exists('$TMUX')
-  let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
-  let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
-else
-  let &t_SI = "\<Esc>]50;CursorShape=1\x7"
-  let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-endif
-
 
 " Enable omni completion
 augroup MyAutoCmd
@@ -247,14 +177,9 @@ augroup MyAutoCmd
   autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
   autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
   autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
-  autocmd FileType java setlocal omnifunc=eclim#java#complete#CodeComplete
+  " autocmd FileType java setlocal omnifunc=eclim#java#complete#CodeComplete
 augroup END
 
-
-
-"===============================================================================
-" Leader Key Mappings
-"===============================================================================
 
 " Map leader and localleader key to comma
 let mapleader = ","
@@ -267,17 +192,16 @@ let g:maplocalleader = ","
 " Key Mappings
 "===============================================================================
 
-" Exit insert mode with jj
-inoremap jj <ESC>
-
 " Save with zz
 nnoremap zz :w<CR>
 
+nnoremap <C-e> :BTags<CR>
+nnoremap <C-p> :Files<CR>
+nnoremap <C-b> :Buffers<CR>
+nnoremap <C-l> :BLines<CR>
 
-"===============================================================================
-" Tag files
-"===============================================================================
-"set tags+=~/.matlabtags
+inoremap <C-Space> <C-x><C-o>
+inoremap <C-@> <C-Space>
 
 "===============================================================================
 " Airline
@@ -288,118 +212,13 @@ nnoremap zz :w<CR>
 
 
 "===============================================================================
-" NERDTree
+" Syntastic
 "===============================================================================
+set statusline+=%#warningmsg#
+set statusline+=%{SyntasticStatuslineFlag()}
+set statusline+=%*
 
-let NERDTreeShowBookmarks=1
-let NERDTreeShowHidden=1
-let NERDTreeIgnore=['\~$', '\.swp$', '\.git', '\.hg', '\.svn', '\.bzr']
-" Close vim if the only window open is nerdtree
-"autocmd MyAutoCmd BufEnter *
-"      \ if (winnr("$") == 1 && exists("b:NERDTreeType") && b:NERDTreeType == "primary") | q | endif
-
-
-"===============================================================================
-" NERDCommenter
-"===============================================================================
-
-" Always leave a space between the comment character and the comment
-let NERDSpaceDelims=1
-
-"===============================================================================
-" Eclim
-"===============================================================================
-"let g:EclimCompletionMethod = 'omnifunc'
-
-
-"===============================================================================
-" Latex
-"===============================================================================
-let g:tex_conceal = ""
-autocmd Filetype tex nmap ZZ :w \| :Latexmk <CR>
-
-"===============================================================================
-" YCM & UltiSnips
-"===============================================================================
-" let g:ycm_confirm_extra_conf = 0
-" let g:ycm_collect_identifiers_from_tags_files = 1
-" let g:ycm_autoclose_preview_window_after_insertion = 1
-" let g:ycm_autoclose_preview_window_after_completion = 1
-" let g:ycm_add_preview_to_completeopt = 1
-let g:ycm_key_list_select_completion = ['<C-n>', '<Down>']
-let g:ycm_key_list_previous_completion = ['<C-p>', '<Up>']
-let g:SuperTabDefaultCompletionType = '<C-n>'
-
-" better key bindings for UltiSnipsExpandTrigger
-let g:UltiSnipsExpandTrigger = "<tab>"
-let g:UltiSnipsJumpForwardTrigger = "<tab>"
-let g:UltiSnipsJumpBackwardTrigger = "<s-tab>"
-
-"===============================================================================
-" Haskell 
-"===============================================================================
-let g:necoghc_enable_detailed_browse = 1
-nmap <silent> <leader>tt :GhcModType<CR>
-nmap <silent> <leader>TT :GhcModTypeInsert<CR>
-nmap <silent> <leader>tc :GhcModTypeClear<CR>
-
-
-"===============================================================================
-" Ocaml 
-"===============================================================================
-let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
-execute "set rtp+=" . g:opamshare . "/merlin/vim"
-execute "helptags " . g:opamshare . "/merlin/vim/doc"
-let g:syntastic_ocaml_checkers = ['merlin']
-
-"===============================================================================
-" Auto save 
-"===============================================================================
-let g:auto_save = 1  " enable AutoSave on Vim startup
-let g:auto_save_in_insert_mode = 0  " do not save while in insert mode
-
-
-"===============================================================================
-" Indent Guides
-"===============================================================================
-let g:indent_guides_guide_size = 1
-let g:indent_guides_enable_on_vim_startup = 1
-
-
-"===============================================================================
-" CtrlP
-"===============================================================================
-nnoremap <C-r> :CtrlPFunky<CR>
-nnoremap ,b :CtrlPBuffer<CR>
-nmap ,l :CtrlPLin<CR><C-\>w
-
-
-
-"===============================================================================
-" Tmux
-"===============================================================================
-if exists('$TMUX')
-  function! TmuxOrSplitSwitch(wincmd, tmuxdir)
-    let previous_winnr = winnr()
-    silent! execute "wincmd " . a:wincmd
-    if previous_winnr == winnr()
-      call system("tmux select-pane -" . a:tmuxdir)
-      redraw!
-    endif
-  endfunction
-
-  let previous_title = substitute(system("tmux display-message -p '#{pane_title}'"), '\n', '', '')
-  let &t_ti = "\<Esc>]2;vim\<Esc>\\" . &t_ti
-  let &t_te = "\<Esc>]2;". previous_title . "\<Esc>\\" . &t_te
-
-  nnoremap <silent> <C-h> :call TmuxOrSplitSwitch('h', 'L')<cr>
-  nnoremap <silent> <C-j> :call TmuxOrSplitSwitch('j', 'D')<cr>
-  nnoremap <silent> <C-k> :call TmuxOrSplitSwitch('k', 'U')<cr>
-  nnoremap <silent> <C-l> :call TmuxOrSplitSwitch('l', 'R')<cr>
-else
-  map <C-h> <C-w>h
-  map <C-j> <C-w>j
-  map <C-k> <C-w>k
-  map <C-l> <C-w>l
-endif
-
+let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_auto_loc_list = 1
+let g:syntastic_check_on_open = 1
+let g:syntastic_check_on_wq = 0
