@@ -5,20 +5,32 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'tpope/vim-commentary'
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'junegunn/fzf.vim'
+
+" Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+" Plug 'junegunn/fzf.vim'
+Plug 'kien/ctrlp.vim'
+
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'altercation/vim-colors-solarized'
+Plug 'chriskempson/base16-vim'
+
 Plug 'scrooloose/syntastic'
+
 Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
+
 Plug 'lervag/vimtex'
-Plug 'ajh17/VimCompletesMe'
+
+" Plug 'ajh17/VimCompletesMe'
+Plug 'Valloric/YouCompleteMe'
+Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}
+
+
+Plug 'let-def/ocp-indent-vim'
 
 call plug#end()
-
 " "===============================================================================
 " " General Settings
 " "===============================================================================
@@ -37,7 +49,7 @@ set ttyfast
 set lazyredraw
 
 " Solid line for vsplit separator
-set fcs=vert:│
+" set fcs=vert:│
 
 " Give one virtual space at end of line
 set virtualedit=onemore
@@ -56,14 +68,19 @@ set splitright
 set splitbelow
 
 " Colorscheme
+"base16
+if filereadable(expand("~/.vimrc_background"))
+  let base16colorspace=256
+  source ~/.vimrc_background
+endif
 
-colorscheme solarized
-set background=light
-"set background=dark
-let g:solarized_bold = 0
-let g:solarized_underline = 0
-let g:solarized_italic = 0
-let g:solarized_visibility = 'high'
+" colorscheme solarized
+" set background=light
+" "set background=dark
+" let g:solarized_bold = 0
+" let g:solarized_underline = 0
+" let g:solarized_italic = 0
+" let g:solarized_visibility = 'high'
 
 " Sets how many lines of history vim has to remember
 set history=10000
@@ -77,9 +94,9 @@ set guioptions-=T  "remove toolbar
 set guioptions-=r  "remove right-hand scroll bar
 
 " Display unprintable chars
-set list
-set listchars=tab:▸\ ,extends:❯,precedes:❮,nbsp:␣
-set showbreak=↪
+" set list
+" set listchars=tab:▸\ ,extends:❯,precedes:❮,nbsp:␣
+" set showbreak=↪
 
 " Minimal number of screen lines to keep above and below the cursor
 set scrolloff=10
@@ -182,23 +199,29 @@ augroup END
 
 
 " Map leader and localleader key to comma
-let mapleader = ","
-let g:mapleader = ","
-let maplocalleader = ","
-let g:maplocalleader = ","
-
+let mapleader =  "\<Space>"
+let g:mapleader =  "\<Space>"
+let maplocalleader =  "\<Space>"
+let g:maplocalleader =  "\<Space>"
 
 "===============================================================================
 " Key Mappings
 "===============================================================================
 
+
+
 " Save with zz
 nnoremap zz :w<CR>
 
-nnoremap <C-e> :BTags<CR>
-nnoremap <C-p> :Files<CR>
-nnoremap <C-b> :Buffers<CR>
-nnoremap <C-l> :BLines<CR>
+" nnoremap <C-e> :BTags<CR>
+" nnoremap <C-p> :Files<CR>
+" nnoremap <C-b> :Buffers<CR>
+" nnoremap <C-l> :BLines<CR>
+
+" nnoremap <C-]> :YcmCompleter GoTo<CR>
+
+
+nnoremap <C-b> :CtrlPBuffer<CR>
 
 inoremap <C-Space> <C-x><C-o>
 inoremap <C-@> <C-Space>
@@ -222,3 +245,19 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 0
 let g:syntastic_check_on_open = 1
 let g:syntastic_check_on_wq = 0
+
+
+"===============================================================================
+" OCaml
+"===============================================================================
+
+let g:opamshare = substitute(system('opam config var share'),'\n$','','''')
+execute "set rtp+=" . g:opamshare . "/merlin/vim"
+
+let g:syntastic_ocaml_checkers = ['merlin']
+let g:merlin_ignore_warnings = "false"
+let g:merlin_split_method = "never"
+
+set rtp^="/home/suem/.opam/system/share/ocp-indent/vim"
+
+
