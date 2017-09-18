@@ -21,14 +21,19 @@ Plug 'justinmk/vim-sneak'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-repeat'
 
-Plug 'lervag/vimtex'
+" Plug 'lervag/vimtex'
+Plug 'LaTeX-Box-Team/LaTeX-Box'
 
 " Plug 'ajh17/VimCompletesMe'
 Plug 'Valloric/YouCompleteMe'
 Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}
 
+Plug 'scrooloose/nerdtree'
 
 Plug 'let-def/ocp-indent-vim'
+Plug 'rgrinberg/vim-ocaml'
+
+Plug 'christoomey/vim-tmux-navigator'
 
 call plug#end()
 " "===============================================================================
@@ -61,26 +66,30 @@ set number
 set relativenumber
 
 " Hilight current line
-set cursorline
+" set cursorline
 
 " Always splits to the right and below
 set splitright
 set splitbelow
 
 " Colorscheme
-"base16
-if filereadable(expand("~/.vimrc_background"))
-  let base16colorspace=256
-  source ~/.vimrc_background
-endif
+" base16
+" if filereadable(expand("~/.vimrc_background"))
+"   let base16colorspace=256
+"   source ~/.vimrc_background
+" endif
 
-" colorscheme solarized
-" set background=light
-" "set background=dark
-" let g:solarized_bold = 0
-" let g:solarized_underline = 0
-" let g:solarized_italic = 0
-" let g:solarized_visibility = 'high'
+"
+set t_Co=256
+let g:solarized_bold = 0
+let g:solarized_underline = 0
+let g:solarized_italic = 0
+let g:solarized_visibility = 'high'
+let g:solarized_termtrans = 1
+let g:solarized_termcolors=256        
+set background=light
+" set background=dark
+colorscheme solarized
 
 " Sets how many lines of history vim has to remember
 set history=10000
@@ -92,6 +101,11 @@ set autoread
 set guioptions-=m  "remove menu bar
 set guioptions-=T  "remove toolbar
 set guioptions-=r  "remove right-hand scroll bar
+set guiheadroom=0 "hide gray pixels at bottom in gvim
+
+if has("gui_running")
+    set guifont=Source\ Code\ Pro\ 13
+endif
 
 " Display unprintable chars
 " set list
@@ -176,6 +190,12 @@ set autoindent
 set nowrap
 set whichwrap+=h,l,<,>,[,]
 
+" Mode dependent cursors for urxvt
+let &t_SI = "\<Esc>[6 q"
+let &t_SR = "\<Esc>[4 q"
+let &t_EI = "\<Esc>[2 q"
+
+
 " Writes to the unnamed register also writes to the * and + registers. This
 " makes it easy to interact with the system clipboard
 if has ('unnamedplus')
@@ -183,7 +203,6 @@ if has ('unnamedplus')
 else
   set clipboard=unnamed
 endif
-
 
 " Enable omni completion
 augroup MyAutoCmd
@@ -222,9 +241,10 @@ nnoremap zz :w<CR>
 
 
 nnoremap <C-b> :CtrlPBuffer<CR>
+nnoremap <space><space> :CtrlPBuffer<CR>
 
-inoremap <C-Space> <C-x><C-o>
-inoremap <C-@> <C-Space>
+" inoremap <C-Space> <C-x><C-o>
+" inoremap <C-@> <C-Space>
 
 "===============================================================================
 " Airline
@@ -232,6 +252,11 @@ inoremap <C-@> <C-Space>
  let g:airline_powerline_fonts=0
  let g:airline_left_sep=''
  let g:airline_right_sep=''
+
+
+"===============================================================================
+" YouCompleteMe
+"===============================================================================
 
 
 "===============================================================================
@@ -261,3 +286,14 @@ let g:merlin_split_method = "never"
 set rtp^="/home/suem/.opam/system/share/ocp-indent/vim"
 
 
+
+"===============================================================================
+" Latexboxc
+"===============================================================================
+
+" let g:LatexBox_latexmk_preview_continuously = 0
+let g:LatexBox_latexmk_preview_continuously = 1
+" let g:LatexBox_latexmk_async = 0
+let g:LatexBox_quickfix = 2
+let g:LatexBox_latexmk_async = 1
+let g:LatexBox_show_warnings = 0
